@@ -1,2 +1,4 @@
 git branch --set-upstream develop origin/develop
 git push origin develop
+git push origin master -f #force push to github and ignore merge issues
+
