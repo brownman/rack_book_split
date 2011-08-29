@@ -14,21 +14,30 @@ require 'book_split'
 module Rack
   class MyApp
 
-    # def initialize
-    @reader = BookSplit::Reader.new
+    def initialize
+      @reader = BookSplit::Reader.new
 
-    @reader.add_story '3.txt'
-    # @reader.story.length.should == 1
-    @reader.add_story '4.txt'
+      @reader.add_story '3.txt'
+      # @reader.story.length.should == 1
+      @reader.add_story '4.txt'
 
-    #   @reader.story.length.should == 2
+      #   @reader.story.length.should == 2
 
-    @reader.update_symbols ','
-    @reader.update_symbols '.'
-    @reader.create
-    @reader.remove_empty!
-     @result = @reader.result_string
-MyAppString = @result
+      @reader.update_symbols ','
+      @reader.update_symbols '.'
+      @reader.create
+      @from_column = @reader.column_limit    
+      @reader.remove_empty!
+      @result_string = ''
+      @from_column.each_with_index  do |row, i|
+        @result_string <<  "<p><a href='?row=#{i}'>#{i})#{row}</a></p>"
+      end
+    end
+
+
+
+    # @result = @reader.result_string
+    MyAppString = @result_string
 
 
     # end
@@ -39,20 +48,28 @@ MyAppString = @result
     #}
     #end
     def call(env)
+      # puts env
       req = Request.new(env)
+
+      puts 'press row'
+      puts     str =  req.GET["row"]
+      puts str.empty?
+
+      puts 'end press row'
       if req.GET["flip"] == "left"
-        myappstr = MyAppString.split("\n").
+        myappstr = @result_string.split("\n").
           map { |line| line.ljust(42).reverse }.
           join("\n")
         href = "?flip=right"
       elsif req.GET["flip"] == "crash"
         raise "MyApp crashed"
       else
-        myappstr = MyAppString
+        myappstr = @result_string
         href = "?flip=left"
       end
 
       res = Response.new
+      res['Content-Type']='text-html'
       res.write "<title>MyAppicious!</title>"
       res.write "<pre>"
       res.write myappstr

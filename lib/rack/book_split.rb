@@ -7,7 +7,9 @@ PATH = File.dirname __FILE__
 
   def initialize file_name
 
-file_path = PATH + '/' + file_name
+file_path = File.expand_path('../../../' , __FILE__   ) + '/txt/' + file_name
+puts file_path
+
     @file = File.open file_path
   end
 
@@ -101,6 +103,10 @@ class Reader
       counter += 1
     end
     str
+  end
+  
+  def column_limit id = 0 , from = 0 , amount = 20
+    @column[id].slice(0 , 20)
   end
   def remove_empty!
     @column.each do |column|

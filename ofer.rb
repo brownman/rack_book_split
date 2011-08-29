@@ -1,0 +1,1 @@
+bacon test/*.rb

@@ -1,6 +1,8 @@
 require 'rack/mock'
 
+
 $LOAD_PATH << File.dirname(__FILE__) + '/../lib'
+#$LOAD_PATH << File.dirname(__FILE__) + '/../txt'
 require 'rack/myapp'
 
 
